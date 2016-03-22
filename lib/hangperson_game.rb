@@ -15,23 +15,42 @@ class HangpersonGame
     @wrong_guesses = ''
   end
 
+  #guess if a word is valid
   def guess(letter)
+    raise ArgumentError if not letter =~ /[A-z]/
+    letter.downcase!
     if @word.include? letter
+      return false if @guesses.include? letter
       @guesses += letter
-      return true
+    else
+      return false if @wrong_guesses.include? letter
+      @wrong_guesses += letter
     end
-    @wrong_guesses += letter
-    return false
   end
 
-  def add_guess_list?(letter, word)
-    if word.include? letter
-      return false
+  #display the guessed word so far
+  def word_with_guesses
+    guessed = ''
+    i = 0
+    @word.each_char do |c|
+      if @guesses.include? c
+        guessed[i] = c
+      else
+        guessed[i] = '-'
+      end
+      i += 1
     end
-    word += letter
-    return true
+    return guessed
   end
 
+  #check for victory or shameful loss
+  def check_win_or_lose
+    return :lose if @wrong_guesses.length >= 7
+    return :win if @guesses.length == @word.length
+    return :play
+  end
+
+  #get random word from web
   def self.get_random_word
     require 'uri'
     require 'net/http'
