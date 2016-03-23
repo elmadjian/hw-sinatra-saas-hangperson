@@ -30,14 +30,10 @@ class HangpersonGame
 
   #display the guessed word so far
   def word_with_guesses
-    guessed = ''
+    guessed = '-' * @word.length
     i = 0
     @word.each_char do |c|
-      if @guesses.include? c
-        guessed[i] = c
-      else
-        guessed[i] = '-'
-      end
+      guessed[i] = c if @guesses.include? c
       i += 1
     end
     return guessed
