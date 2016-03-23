@@ -19,24 +19,15 @@ class HangpersonGame
   def guess(letter)
     raise ArgumentError if not letter =~ /[A-z]/
     letter.downcase!
-    if @word.include? letter
-      return false if @guesses.include? letter
-      @guesses += letter
-    else
-      return false if @wrong_guesses.include? letter
-      @wrong_guesses += letter
-    end
+    return false if @guesses.include? letter or @wrong_guesses.include? letter
+    (@word.include? letter)? @guesses << letter : @wrong_guesses << letter
   end
 
   #display the guessed word so far
   def word_with_guesses
-    guessed = '-' * @word.length
-    i = 0
-    @word.each_char do |c|
-      guessed[i] = c if @guesses.include? c
-      i += 1
-    end
-    return guessed
+    guess = ''
+    @word.each_char {|c| guess << ((@guesses.include? c)? c : '-')}
+    return guess
   end
 
   #check for victory or shameful loss
@@ -44,9 +35,7 @@ class HangpersonGame
     win = true
     @word.each_char {|c| win = false if not @guesses.include? c}
     return :lose if @wrong_guesses.length >= 7
-    #return :win if @guesses.length == @word.length
-    return :win if win
-    return :play
+    return win ? :win : :play
   end
 
   #get random word from web
