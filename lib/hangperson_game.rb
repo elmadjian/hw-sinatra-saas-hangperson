@@ -45,8 +45,11 @@ class HangpersonGame
 
   #check for victory or shameful loss
   def check_win_or_lose
+    win = true
+    @word.each_char {|c| win = false if not @guesses.include? c}
     return :lose if @wrong_guesses.length >= 7
-    return :win if @guesses.length == @word.length
+    #return :win if @guesses.length == @word.length
+    return :win if win
     return :play
   end
 
